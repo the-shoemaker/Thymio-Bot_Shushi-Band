@@ -1,0 +1,31 @@
+var base_speed = 450
+var base_speed_r = 450
+var turn_speed = 350
+var black_threshold = 300
+var left_sensor = 0
+var right_sensor = 0
+
+onevent prox
+    left_sensor = prox.ground.delta[0]
+    right_sensor = prox.ground.delta[1]
+    
+    if left_sensor < black_threshold and right_sensor < black_threshold then
+        motor.left.target = base_speed
+        motor.right.target = base_speed_r
+        call leds.top(0, 0, 32)
+
+    elseif left_sensor < black_threshold and right_sensor >= black_threshold then
+        motor.left.target = base_speed - turn_speed
+        motor.right.target = base_speed_r
+        call leds.top(32, 32, 0)
+
+    elseif right_sensor < black_threshold and left_sensor >= black_threshold then
+        motor.left.target = base_speed
+        motor.right.target = base_speed_r - turn_speed
+        call leds.top(32, 32, 0)
+
+    else
+        motor.left.target = 0
+        motor.right.target = 0
+        call leds.top(32, 0, 0)
+    end
